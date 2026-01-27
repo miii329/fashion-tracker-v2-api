@@ -1,0 +1,36 @@
+FROM ruby:3.4.5-slim
+
+# Rails app lives here
+WORKDIR /rails
+
+# Install packages needed for development
+RUN apt-get update -qq && \
+    apt-get install --no-install-recommends -y \
+    build-essential \
+    curl \
+    git \
+    libpq-dev \
+    libyaml-dev \
+    pkg-config \
+    postgresql-client \
+    libvips \
+    && rm -rf /var/lib/apt/lists /var/cache/apt/archives
+
+# Set development environment
+ENV RAILS_ENV="development" \
+    BUNDLE_PATH="/usr/local/bundle"
+
+# Copy Gemfile
+COPY Gemfile Gemfile.lock ./
+
+# Install gems (will be overridden by volume mount but creates cache)
+RUN bundle install
+
+# Copy application code
+COPY . .
+
+# Expose port
+EXPOSE 3000
+
+# Start server
+CMD ["bin/rails", "server", "-b", "0.0.0.0"]
