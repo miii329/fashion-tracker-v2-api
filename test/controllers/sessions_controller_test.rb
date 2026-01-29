@@ -1,33 +1,30 @@
 require "test_helper"
 
 class SessionsControllerTest < ActionDispatch::IntegrationTest
-  setup { @user = User.take }
-
-  test "new" do
-    get new_session_path
-    assert_response :success
-  end
+  setup { @user = User.create!(email_address: "test@example.com", password: "password", password_confirmation: "password", fullname: "Test User") }
 
   test "create with valid credentials" do
-    post session_path, params: { email_address: @user.email_address, password: "password" }
+    post api_v2_session_path, params: { email_address: @user.email_address, password: "password" }, as: :json
 
-    assert_redirected_to root_path
+    assert_response :ok
+    assert_equal "ログインしました", JSON.parse(response.body)["message"]
     assert cookies[:session_id]
   end
 
   test "create with invalid credentials" do
-    post session_path, params: { email_address: @user.email_address, password: "wrong" }
+    post api_v2_session_path, params: { email_address: @user.email_address, password: "wrong" }, as: :json
 
-    assert_redirected_to new_session_path
+    assert_response :unauthorized
+    assert_equal "メールアドレスまたはパスワードが正しくありません", JSON.parse(response.body)["error"]
     assert_nil cookies[:session_id]
   end
 
   test "destroy" do
-    sign_in_as(User.take)
+    sign_in_as(@user)
 
-    delete session_path
+    delete api_v2_session_path, as: :json
 
-    assert_redirected_to new_session_path
-    assert_empty cookies[:session_id]
+    assert_response :ok
+    assert_equal "ログアウトしました", JSON.parse(response.body)["message"]
   end
 end

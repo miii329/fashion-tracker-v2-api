@@ -18,10 +18,14 @@ default: &default
   # For details on connection pooling, see Rails configuration guide
   # https://guides.rubyonrails.org/configuring.html#database-pooling
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  url: <%= ENV['DATABASE_URL'] %>
+  host: localhost
+  port: 5432
 
 development:
   <<: *default
+  host: localhost
+  port: 5432
+  database: fashion_trends_tracker_api_development
 
   # The specified database role being used to connect to PostgreSQL.
   # To create additional roles in PostgreSQL see `$ createuser --help`.
@@ -54,8 +58,12 @@ development:
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
 test:
-  <<: *default
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   database: fashion_trends_tracker_api_test
+  host: localhost
+  port: 5432
 
 # As with config/credentials.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
@@ -86,18 +94,16 @@ test:
 production:
   primary: &primary_production
     <<: *default
-    database: fashion_trends_tracker_api_production
-    username: fashion_trends_tracker_api
-    password: <%= ENV["FASHION_TRENDS_TRACKER_API_DATABASE_PASSWORD"] %>
+    url: <%= ENV['DATABASE_URL'] %>
   cache:
     <<: *primary_production
-    database: fashion_trends_tracker_api_production_cache
+    url: <%= ENV['DATABASE_URL'] %>
     migrations_paths: db/cache_migrate
   queue:
     <<: *primary_production
-    database: fashion_trends_tracker_api_production_queue
+    url: <%= ENV['DATABASE_URL'] %>
     migrations_paths: db/queue_migrate
   cable:
     <<: *primary_production
-    database: fashion_trends_tracker_api_production_cable
+    url: <%= ENV['DATABASE_URL'] %>
     migrations_paths: db/cable_migrate
