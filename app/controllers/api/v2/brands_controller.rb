@@ -1,11 +1,12 @@
 module Api
   module V2
     class BrandsController < ApplicationController
+      before_action :require_authentication
       before_action :set_brand, only: %i[ show update destroy ]
 
       # GET /api/v2/brands
       def index
-        @brands = Brand.all
+        @brands = Current.user.brands
         render json: @brands
       end
 
@@ -16,7 +17,7 @@ module Api
 
       # POST /api/v2/brands
       def create
-        @brand = Brand.new(brand_params)
+        @brand = Current.user.brands.new(brand_params)
 
         if @brand.save
           render json: @brand, status: :created, location: api_v2_brand_url(@brand)
@@ -43,7 +44,7 @@ module Api
       private
 
       def set_brand
-        @brand = Brand.find(params.expect(:id))
+        @brand = Current.user.brands.find(params.expect(:id))
       end
 
       def brand_params
