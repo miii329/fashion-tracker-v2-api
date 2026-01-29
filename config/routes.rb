@@ -7,6 +7,8 @@ Rails.application.routes.draw do
       resource :users, only: [ :create ] # これが「ユーザー登録」の宛先
       # パスワードリセット
       resources :passwords, param: :token, only: [ :create, :update ]
+      # ブランド管理
+      resources :brands
       # アイテム一覧・詳細
       resources :items, only: [ :index, :show ]
     end
