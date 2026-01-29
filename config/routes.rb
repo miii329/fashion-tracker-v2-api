@@ -7,8 +7,16 @@ Rails.application.routes.draw do
       resource :users, only: [ :create ] # これが「ユーザー登録」の宛先
       # パスワードリセット
       resources :passwords, param: :token, only: [ :create, :update ]
+      # ブランド管理
+      resources :brands
       # アイテム一覧・詳細
       resources :items, only: [ :index, :show ]
+    end
+
+    # 旧エンドポイントとの互換性（フロントエンド移行期間用）
+    namespace :auth do
+      delete "logout", to: "v2/sessions#destroy"
+      post "login", to: "v2/sessions#create"
     end
   end
 

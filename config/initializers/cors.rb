@@ -8,11 +8,11 @@
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
     origins "https://fashion-trends-tracker.web.app", # 本番環境
-            "http://localhost:4200",                   # ローカル開発（Angular）
-            "http://localhost:3000"                    # ローカル開発（React等）
+            "http://localhost:4200"              # ローカル開発（Angular）
 
     resource "*",
       headers: :any,
-      methods: [ :get, :post, :put, :patch, :delete, :options, :head ]
+      methods: [ :get, :post, :put, :patch, :delete, :options, :head ],
+      credentials: true
   end
 end
