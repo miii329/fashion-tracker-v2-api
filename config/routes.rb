@@ -10,6 +10,12 @@ Rails.application.routes.draw do
       # アイテム一覧・詳細
       resources :items, only: [ :index, :show ]
     end
+
+    # 旧エンドポイントとの互換性（フロントエンド移行期間用）
+    namespace :auth do
+      delete "logout", to: "v2/sessions#destroy"
+      post "login", to: "v2/sessions#create"
+    end
   end
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
