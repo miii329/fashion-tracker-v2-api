@@ -1,7 +1,7 @@
 class AddUserToBrands < ActiveRecord::Migration[8.1]
   def change
     add_reference :brands, :user, null: true, foreign_key: true
-    
+
     # 既存データにデフォルトユーザーを設定（最初のユーザー）
     reversible do |dir|
       dir.up do
@@ -11,7 +11,7 @@ class AddUserToBrands < ActiveRecord::Migration[8.1]
         end
         change_column_null :brands, :user_id, false
       end
-      
+
       dir.down do
         change_column_null :brands, :user_id, true
       end
