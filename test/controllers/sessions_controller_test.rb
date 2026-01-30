@@ -8,7 +8,8 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :ok
     assert_equal "ログインしました", JSON.parse(response.body)["message"]
-    assert cookies[:session_id]
+    assert JSON.parse(response.body)["token"]
+    assert_equal "Bearer", JSON.parse(response.body)["token_type"]
   end
 
   test "create with invalid credentials" do
@@ -16,13 +17,13 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :unauthorized
     assert_equal "メールアドレスまたはパスワードが正しくありません", JSON.parse(response.body)["error"]
-    assert_nil cookies[:session_id]
+    response_json = JSON.parse(response.body)
+    refute response_json["token"]
   end
 
   test "destroy" do
-    sign_in_as(@user)
-
-    delete api_v2_session_path, as: :json
+    token = JwtService.generate_token_for(@user)
+    delete api_v2_session_path, headers: { "Authorization" => "Bearer #{token}" }, as: :json
 
     assert_response :ok
     assert_equal "ログアウトしました", JSON.parse(response.body)["message"]

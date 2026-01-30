@@ -12,35 +12,31 @@ module Authentication
   end
 
   private
-    def authenticated?
-      resume_session
-    end
 
-    def require_authentication
-      resume_session || request_authentication
-    end
+  def require_authentication
+    render json: { error: "認証が必要です" }, status: :unauthorized unless authenticated_user
+  end
 
-    def resume_session
-      Current.session ||= find_session_by_cookie
-    end
+  def authenticated_user
+    @authenticated_user ||= authenticate_user_from_token
+  end
 
-    def find_session_by_cookie
-      Session.find_by(id: cookies.signed[:session_id]) if cookies.signed[:session_id]
-    end
+  def authenticate_user_from_token
+    header = request.headers["Authorization"]
+    return nil unless header&.starts_with?("Bearer ")
 
-    def request_authentication
-      render json: { error: "認証が必要です" }, status: :unauthorized
-    end
+    token = header.split(" ").last
+    payload = JwtService.decode(token)
+    return nil unless payload
 
-    def start_new_session_for(user)
-      user.sessions.create!(user_agent: request.user_agent, ip_address: request.remote_ip).tap do |session|
-        Current.session = session
-        cookies.signed.permanent[:session_id] = { value: session.id, httponly: true, same_site: :lax }
-      end
-    end
+    User.find_by(id: payload["user_id"])
+  end
 
-    def terminate_session
-      Current.session.destroy
-      cookies.delete(:session_id)
-    end
+  def Current.user
+    @current_user ||= authenticated_user
+  end
+
+  def request_authentication
+    render json: { error: "認証が必要です" }, status: :unauthorized
+  end
 end
