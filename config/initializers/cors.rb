@@ -7,7 +7,7 @@
 
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    origins "https://fashion-trends-tracker.web.app", # 本番環境
+    origins "https://fashion-tracker-v2-ng.vercel.app", # 本番環境
             "http://localhost:4200"              # ローカル開発（Angular）
 
     resource "*",
