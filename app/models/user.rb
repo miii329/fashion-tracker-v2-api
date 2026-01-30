@@ -11,4 +11,9 @@ class User < ApplicationRecord
   def admin?
     admin
   end
+
+  # JWTトークンを生成
+  def generate_jwt_token
+    JwtService.generate_token_for(self)
+  end
 end
