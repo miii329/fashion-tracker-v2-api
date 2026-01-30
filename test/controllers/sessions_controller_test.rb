@@ -8,8 +8,8 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :ok
     assert_equal "ログインしました", JSON.parse(response.body)["message"]
-    assert JSON.parse(response.body)["token"]
-    assert_equal "Bearer", JSON.parse(response.body)["token_type"]
+    assert JSON.parse(response.body)["authToken"]
+    assert_equal "Bearer", JSON.parse(response.body)["tokenType"]
   end
 
   test "create with invalid credentials" do
@@ -18,7 +18,7 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
     assert_response :unauthorized
     assert_equal "メールアドレスまたはパスワードが正しくありません", JSON.parse(response.body)["error"]
     response_json = JSON.parse(response.body)
-    refute response_json["token"]
+    refute response_json["authToken"]
   end
 
   test "destroy" do

@@ -10,8 +10,8 @@ module Api
           render json: {
             message: "ログインしました",
             user: user,
-            token: token,
-            token_type: "Bearer"
+            authToken: token,
+            tokenType: "Bearer"
           }, status: :ok
         else
           render json: { error: "メールアドレスまたはパスワードが正しくありません" }, status: :unauthorized

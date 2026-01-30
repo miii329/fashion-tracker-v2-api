@@ -2,6 +2,9 @@ module Authentication
   extend ActiveSupport::Concern
 
   included do
+    # 1. まず誰かを特定し、Current.userに保存する
+    before_action :authenticate_user_from_token
+    # 2. 次に、Current.userがいなければ拒否する
     before_action :require_authentication
   end
 
@@ -27,16 +30,10 @@ module Authentication
 
     token = header.split(" ").last
     payload = JwtService.decode(token)
-    return nil unless payload
 
-    User.find_by(id: payload["user_id"])
-  end
-
-  def Current.user
-    @current_user ||= authenticated_user
-  end
-
-  def request_authentication
-    render json: { error: "認証が必要です" }, status: :unauthorized
+    # ユーザーを見つけたら Current.user という箱に入れる
+    if payload
+      Current.user = User.find_by(id: payload["user_id"])
+    end
   end
 end
