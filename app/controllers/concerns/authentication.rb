@@ -36,5 +36,4 @@ module Authentication
       Current.user = User.find_by(id: payload["user_id"])
     end
   end
-
 end
