@@ -22,14 +22,14 @@ module Authentication
   end
 
   def authenticate_user_from_token
-    header = request.headers['Authorization']
-    return nil unless header&.starts_with?('Bearer ')
+    header = request.headers["Authorization"]
+    return nil unless header&.starts_with?("Bearer ")
 
-    token = header.split(' ').last
+    token = header.split(" ").last
     payload = JwtService.decode(token)
     return nil unless payload
 
-    User.find_by(id: payload['user_id'])
+    User.find_by(id: payload["user_id"])
   end
 
   def Current.user

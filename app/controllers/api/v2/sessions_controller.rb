@@ -1,14 +1,14 @@
 module Api
   module V2
     class SessionsController < ApplicationController
-      skip_before_action :require_authentication, only: [:create, :destroy]
+      skip_before_action :require_authentication, only: [ :create, :destroy ]
       rate_limit to: 10, within: 3.minutes, only: :create, with: -> { render json: { error: "Try again later." }, status: :too_many_requests }
 
       def create
         if user = User.authenticate_by(params.permit(:email_address, :password))
           token = JwtService.generate_token_for(user)
-          render json: { 
-            message: "ログインしました", 
+          render json: {
+            message: "ログインしました",
             user: user,
             token: token,
             token_type: "Bearer"
