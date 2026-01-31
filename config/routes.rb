@@ -9,6 +9,8 @@ Rails.application.routes.draw do
       resources :passwords, param: :token, only: [ :create, :update ]
       # ブランド管理
       resources :brands
+      # お気に入りアイテム管理
+      resources :favorite_items
       # アイテム一覧・詳細
       resources :items, only: [ :index, :show ]
     end
