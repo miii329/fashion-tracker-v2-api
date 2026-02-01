@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   namespace :api do
     namespace :v2 do
+      get "health_check", to: ->(env) { [ 200, {}, [ "ok" ] ] }
       # ログイン・ログアウト
       resource :session, only: [ :create, :destroy ]
       # ユーザー登録
