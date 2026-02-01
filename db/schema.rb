@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_29_180526) do
+ActiveRecord::Schema[8.1].define(version: 2026_01_31_164506) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -22,6 +22,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_29_180526) do
     t.string "url"
     t.bigint "user_id", null: false
     t.index ["user_id"], name: "index_brands_on_user_id"
+  end
+
+  create_table "favorite_items", force: :cascade do |t|
+    t.string "brand_name"
+    t.string "category"
+    t.datetime "created_at", null: false
+    t.string "item_name"
+    t.text "memo"
+    t.integer "price"
+    t.datetime "updated_at", null: false
+    t.string "url"
+    t.bigint "user_id", null: false
+    t.index ["user_id"], name: "index_favorite_items_on_user_id"
   end
 
   create_table "sessions", force: :cascade do |t|
@@ -44,5 +57,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_29_180526) do
   end
 
   add_foreign_key "brands", "users"
+  add_foreign_key "favorite_items", "users"
   add_foreign_key "sessions", "users"
 end
