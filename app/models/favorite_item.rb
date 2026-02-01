@@ -9,5 +9,5 @@ class FavoriteItem < ApplicationRecord
   validates :price, numericality: { only_integer: true, allow_blank: true }
 
   # URLのフォーマット検証
-  validates :url, format: { with: URI::regexp(%w[http https]), allow_blank: true }
+  validates :url, format: { with: URI.regexp(%w[http https]), allow_blank: true }
 end

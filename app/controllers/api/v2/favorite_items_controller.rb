@@ -1,6 +1,6 @@
 class Api::V2::FavoriteItemsController < ApplicationController
   before_action :require_authentication
-  before_action :set_favorite_item, only: [:show, :update, :destroy]
+  before_action :set_favorite_item, only: [ :show, :update, :destroy ]
 
   # GET /api/v2/favorite_items
   def index
