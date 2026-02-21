@@ -48,7 +48,7 @@ module Api
       end
 
       def brand_params
-        params.expect(brand: [ :name, :url, :description ])
+        params.expect(brand: [ :name, :category, :url, :description ])
       end
     end
   end
