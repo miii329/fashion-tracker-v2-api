@@ -11,7 +11,11 @@ Rails.application.routes.draw do
       # ブランド管理
       resources :brands
       # お気に入りアイテム管理
-      resources :favorite_items
+      resources :favorite_items do
+        collection do
+          post :preview
+        end
+      end
       # アイテム一覧・詳細
       resources :items, only: [ :index, :show ]
     end
