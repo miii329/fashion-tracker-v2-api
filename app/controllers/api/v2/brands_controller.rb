@@ -20,6 +20,7 @@ module Api
         @brand = Current.user.brands.new(brand_params)
 
         if @brand.save
+          @brand.attach_ogp_image_from_url
           render json: @brand, status: :created, location: api_v2_brand_url(@brand)
         else
           render json: @brand.errors, status: :unprocessable_entity
@@ -29,6 +30,7 @@ module Api
       # PATCH/PUT /api/v2/brands/1
       def update
         if @brand.update(brand_params)
+          @brand.attach_ogp_image_from_url
           render json: @brand
         else
           render json: @brand.errors, status: :unprocessable_entity

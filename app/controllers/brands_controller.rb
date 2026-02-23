@@ -18,6 +18,7 @@ class BrandsController < ApplicationController
     @brand = Brand.new(brand_params)
 
     if @brand.save
+      @brand.attach_ogp_image_from_url
       render json: @brand, status: :created, location: @brand
     else
       render json: @brand.errors, status: :unprocessable_content
@@ -27,6 +28,7 @@ class BrandsController < ApplicationController
   # PATCH/PUT /brands/1
   def update
     if @brand.update(brand_params)
+      @brand.attach_ogp_image_from_url
       render json: @brand
     else
       render json: @brand.errors, status: :unprocessable_content
